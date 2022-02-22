@@ -11,7 +11,7 @@ const DIRECTION = {
   UP: 2,
   DOWN: 3,
 };
-const MOVE_INTERVAL = 50;
+const MOVE_INTERVAL = 120;
 
 function initPosition() {
   return {
@@ -164,11 +164,6 @@ function moveUp(snake) {
   eat(snake, apple1, apple2);
 }
 
-function moveBody(snake) {
-  snake.body.unshift({ x: snake.head.x, y: snake.head.y });
-  snake.body.pop();
-}
-
 function move(snake) {
   switch (snake.direction) {
     case DIRECTION.LEFT:
@@ -184,14 +179,9 @@ function move(snake) {
       moveUp(snake);
       break;
   }
-  moveBody(snake);
-  if (!checkCollision([snake1, snake2, snake3])) {
-    setTimeout(function () {
-      move(snake);
-    }, MOVE_INTERVAL);
-  } else {
-    initGame();
-  }
+  setTimeout(function () {
+    move(snake);
+  }, MOVE_INTERVAL);
 }
 
 document.addEventListener("keydown", function (event) {
@@ -225,38 +215,6 @@ document.addEventListener("keydown", function (event) {
     snake3.direction = DIRECTION.DOWN;
   }
 });
-
-function initSnake(color) {
-  return {
-    color: color,
-    ...initHeadAndBody(),
-    direction: initDirection(),
-    score: 0,
-  };
-}
-
-function checkCollision(snake) {
-  let isCollide = false;
-  for (let i = 0; i < snake.length; i++) {
-    for (let j = 0; j < snake.length; j++) {
-      for (let k = 1; k < snake[j].body.length; k++) {
-        if (
-          snake[i].head.x == snake[j].body[k].x &&
-          snake[i].head.y == snake[j].body[k].y
-        ) {
-          isCollide = true;
-        }
-      }
-    }
-  }
-  if (isCollide) {
-    alert("Game over");
-    snake1 = initSnake("purple");
-    snake2 = initSnake("blue");
-    snake3 = initSnake("green");
-  }
-  return isCollide;
-}
 
 function initGame() {
   move(snake1);
